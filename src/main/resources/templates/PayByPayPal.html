@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>[[${pageTitle}]]</title>
+<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+</head>
+<style>
+body {
+  background-image: url('sell.png');
+  background-size: cover;
+}
+</style>
+<body>
+
+
+
+		<nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">MarketSwipe</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarCollapse">
+					<ul class="navbar-nav me-auto mb-2 mb-md-0">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" th:href="@{/home_page}">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" th:href="@{/listItems}">List Product</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" th:href="@{/products}"> My Products</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" th:href="@{/myAccount}"> My Account</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" th:href="@{/crypto}"> Crypto Markets</a>
+						</li>
+					</ul>
+					<form class="d-flex" role="search">
+						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+						<button class="btn btn-outline-success" type="submit">Search</button>
+					</form>
+				</div>
+			</div>
+			<li class="nav-item">
+				<div class="container text-center">
+					<form th:action="@{/logout}" method="post">
+						<p style="color:green;">
+							Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+						</p>
+						<input type="submit" value="Sign Out" />
+					</form>
+				</div>
+			</li>
+		</nav>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+	
+</div>
+
+		<div class="container text-center">
+			<h1 style="color:green;">[[${pageTitle}]]</h1>
+	<form th:action="@{/products/save}" th:object="${item}"
+		  method="post" enctype="multipart/form-data" style="max-width: 600px; margin: 0 auto;">
+		<input type="hidden" th:field="*{itemId}">
+		<div class="m-3">
+			<div class="form-group row">
+				<label class="col-4 col-form-label">Product name: </label>
+				<div class="col-8">
+					<input type="text" th:field="*{itemName}" class="form-control" required />
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-4 col-form-label">Price: </label>
+				<div class="col-8">
+					<input type="text" th:field="*{itemPrice}" class="form-control"
+						   required minlength="0" maxlength="10"/>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-4 col-form-label">Description: </label>
+				<div class="col-8">
+					<input type="text" th:field="*{itemDesc}" class="form-control"
+						   required minlength="2" maxlength="40"/>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-4 col-form-label">Category: </label>
+				<div class="col-8">
+					<select name="category" th:field="*{category}" class="form-control">
+						<option value="Outdoor">Outdoor</option>
+						<option value="Camera">Camera</option>
+						<option value="Sports">Outdoor</option>
+						<option value="Vehicles">Vehicles</option>
+						<option value="Home Furniture">Home Furniture</option>
+						<option value="Garden Furniture">Garden Furniture</option>
+						<option value="Phone">Phone</option>
+						<option value="Laptop">Laptop</option>
+						<option value="Clothing">clothing</option>
+					</select>
+				</div>
+
+
+			</div>
+			<div class="form-group row">
+				<label class="col-4 col-form-label">Image: </label>
+				<div class="col-8">
+					<input type="file" name="file" class="form-control" accept="image/png, image/jpeg" required minlength="2" maxlength="20"/>
+				</div>
+
+			</div>
+
+
+
+
+			<div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</div>
+		</div>
+	</form>
+
+</body>
+</html>
+
