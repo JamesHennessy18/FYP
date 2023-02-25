@@ -156,9 +156,9 @@ img {
             <td th:text="${item.itemDesc}">Description</td>
             <td th:text="${item.itemPrice}">Price</td>
             <td>
-                <a class="btn btn-primary mt 4" th:href="@{'/products/update/' + ${item.itemId}}">Pay By PayPal</a>
-                <a class="btn btn-info mt 4" th:href="@{'/products/update/' + ${item.itemId}}">Pay By Stripe</a>
-                <a class="btn btn-warning mt 4" th:href="@{'/products/update/' + ${item.itemId}}">Pay By Crypto</a>
+                <a class="btn btn-primary mt 4" th:href="@{/PayPal}">PayPal Payment</a>
+                <a class="btn btn-info mt 4" th:href="@{/Card}" method="post">Card Payment</a>
+                <a class="btn btn-warning mt 4" th:href="@{/Crypto}">Crypto Payment</a>
             </td>
         </tr>
         </tbody>

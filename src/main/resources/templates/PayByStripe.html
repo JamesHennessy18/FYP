@@ -111,13 +111,13 @@ span.price {
     </style>
 </head>
 <body>
-
+§
 <div class="row">
 	<div class="col-75">
 		<div class="container">
-			<form method="post"  th:action="@{/pay}">
+			<form method="post"  th:action="@{/Stripe}" th:object="${item}" >
 				<div class="col-50">
-					<h3>Payment</h3>
+					<h3>Card Payment</h3>
 					<label>Accepted Cards</label>
 					<div class="icon-container">
 						<i class="fa fa-cc-visa" style="color:navy;"></i>
@@ -126,11 +126,11 @@ span.price {
 						<i class="fa fa-cc-discover" style="color:orange;"></i>
 					</div>
 					<label for="price">Total</label>
-					<input type="text" id="price" name="price" value="10" readonly="readonly">
+					<input type="text" id="price" name="price" th:field="*{itemPrice}" readonly="readonly">
 					<label for="currency">Currency</label>
 					<input type="text" id="currency" name="currency" value="USD" readonly="readonly">
 					<label for="method">Payment Method</label>
-					<input type="text" id="method" name="method" value="PayPal" readonly="readonly">
+					<input type="text" id="method" name="method" value="Stripe" readonly="readonly">
 					<label for="intent">Intent</label>
 					<input type="text" id="intent" name="intent" value="sale" readonly="readonly">
 					<label for="description">Payment Description</label>
@@ -138,7 +138,7 @@ span.price {
 
 				</div>
 
-				<input type="submit" value="Continue to checkout" class="btn">
+				<input type="submit" value="Pay now" class="btn">
 			</form>
 		</div>
 	</div>

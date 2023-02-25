@@ -1,4 +1,4 @@
-package com.example;
+package com.example.PayPal;
 
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.OAuthTokenCredential;
@@ -36,6 +36,6 @@ public class PaypalConfiguration {
     public APIContext apiContext() throws PayPalRESTException {
         APIContext context = new APIContext(oAuthTokenCredential().getAccessToken());
         context.setConfigurationMap(paypalSdkConfig());
-        return apiContext();
+        return context;
     }
 }

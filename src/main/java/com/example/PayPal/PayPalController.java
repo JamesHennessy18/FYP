@@ -1,4 +1,4 @@
-package com.example;
+package com.example.PayPal;
 
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
@@ -27,8 +27,8 @@ import com.paypal.api.payments.Links;
     public String payment(@ModelAttribute("order") Order order) {
         try {
             Payment payment = payPalService.createPayment(order.getPrice(), order.getCurrency(), order.getMethod(),
-                    order.getIntent(), order.getDescription(), "http://localhost:9090/" + CANCEL_URL,
-                    "http://localhost:9090/" + SUCCESS_URL);
+                    order.getIntent(), order.getDescription(), "http://localhost:8080/" + CANCEL_URL,
+                    "http://localhost:8080/" + SUCCESS_URL);
             for(Links link:payment.getLinks()) {
                 if(link.getRel().equals("approval_url")) {
                     return "redirect:"+link.getHref();

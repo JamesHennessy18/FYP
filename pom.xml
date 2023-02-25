@@ -73,6 +73,15 @@
 			<artifactId>rest-api-sdk</artifactId>
 			<version>1.4.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>20.48.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -1,4 +1,4 @@
-package com.example;
+package com.example.PayPal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
