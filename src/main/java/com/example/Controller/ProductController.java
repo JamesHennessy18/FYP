@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -51,21 +52,45 @@ public class ProductController {
         return "productList";
     }
 
+
     @PostMapping("/products/save")
-    public String itemAdd(Item item,  @RequestParam("file") MultipartFile multipartFile, Principal principal, RedirectAttributes redirectAttributes) throws IOException {
+    public String itemAdd(Item item, @RequestParam("files") MultipartFile[] multipartFiles, Principal principal, RedirectAttributes redirectAttributes) throws IOException {
         User user = userRepository.findByEmail(principal.getName());
         item.setUser(user);
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        item.setImage(fileName);
-        String uploadDir = "user-photos/" + item.getItemId();
+        item.setAvailable(true);
+        item.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        item = itemRepository.save(item);
 
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        String uploadDir = "product-photos/" + item.getItemId();
+
+        for (int i = 0; i < multipartFiles.length && i < 3; i++) {
+            MultipartFile multipartFile = multipartFiles[i];
+            if (!multipartFile.isEmpty()) {
+                String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+
+                switch (i) {
+                    case 0:
+                        item.setImage(fileName);
+                        break;
+                    case 1:
+                        item.setImage1(fileName);
+                        break;
+                    case 2:
+                        item.setImage2(fileName);
+                        break;
+                }
+
+                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            }
+        }
+
+        // Update and save the item with the image names
         itemRepository.save(item);
-
 
         redirectAttributes.addFlashAttribute("message", "Product Listed for sale");
         return "redirect:/products";
     }
+
 
     @GetMapping("/products/update/{itemId}")
         public String updateItem(@PathVariable("itemId") Long itemId, Model model, RedirectAttributes redirectAttributes) {

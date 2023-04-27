@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>List Transactions</title>
+    <link th:href="@{/main.css}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js">   </script>
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script th:src="@{/main.js}"  type="text/javascript"></script>
+
+<style>
+
+
+  .thead-green {
+  background-color: #05762E; /* Adjust the color as needed */
+  color: #ffffff; /* Adjust the text color as needed */
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: Arial, sans-serif;
+  }
+
+  .table thead {
+    background-color: #05762E;
+    color: #fff;
+  }
+
+  .table th {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 2px solid #2c3e50;
+  }
+
+  .table tbody tr {
+    border-bottom: 1px solid #ddd;
+  }
+
+
+
+  .table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  .table td {
+    padding: 12px 15px;
+  }
+
+
+
+
+</style>
+</head>
+<body>
+<div class="modal fade" id="instructionsModal" role="dialog" aria-labelledby="instructionsModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 80%; height: 100%;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="instructionsModalLabel">About MarketSwipe Orders</h5>
+            </div>
+            <div class="modal-body">
+                <p>At MarketSwipe, we value your protection. In order to make orders satisfactory for out users, we have implemented some security.</p>
+                <p>Seller: please mark the order complete once you can see the buyer has paid and you have sent the item.</p>
+                <p>Buyer: Please mark the order as complete once you have received the item so we can pay out the seller.</p>
+                <p>Buyer can rate sellers based on their experience throughout their purchase, Please be fair.</p>
+                <p>Thank you and we hope you enjoy your experience with MarketSwipe.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">MarketSwipe</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/home_page}">Shop Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/listItems}">List a Product</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/products}"> My Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/chat}"> My Messages</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        My Orders
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="ordersDropdown">
+                        <a class="dropdown-item" th:href="@{/transactions}">Crypto Orders</a>
+                        <a class="dropdown-item" th:href="@{/payPalTransactions}">PayPal Orders</a>
+                        <a class="dropdown-item" th:href="@{/bidding}">View Bids</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        My Account
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="ordersDropdown">
+                        <a class="dropdown-item" th:href="@{/myAccount}">Account Details</a>
+                        <a class="dropdown-item" th:href="@{/viewWallet}">Wallet Details</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Trending
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="ordersDropdown">
+                        <a class="dropdown-item" th:href="@{/trending}">Market Trends</a>
+                        <a class="dropdown-item" th:href="@{/saleTrends}">Past Sales</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/crypto}"> Crypto Markets</a>
+                </li>
+
+
+            </ul>
+
+        </div>
+    </div>
+
+    <li class="nav-item">
+        <div class="cont text-center">
+            <form th:action="@{/logout}" method="post">
+                <p style="color:green;">
+                    Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+                </p>
+                <input type="submit" value="Sign Out" />
+            </form>
+        </div>
+    </li>
+</nav>
+
+<div class="container text-center">
+    <div>
+        <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" alt="PayPal" />
+        <h2 style="color:green;">Manage PayPal Orders</h2>
+    </div>
+    <div>
+        <h3>Bought Items</h3>
+        <table class="table">
+            <thead class="thead-green">
+            <tr>
+                <th>Image</th>
+                <th>Item Name</th>
+                <th>&#8364; Price</th>
+                <th>OrderId</th>
+                <th>Status</th>
+                <th>Shipment Address</th>
+                <th>Payment</th>
+                <th>Manage Transaction</th>
+                <th>Rate Seller</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item: ${listItems}" th:if="${item.buyer.id == userId}">
+                <td><img th:src="${item.photosImagePath}" style="width: 100px; height: 100px;"></td>
+                <td th:text="${item.itemName}">Item Name</td>
+                <td th:text="&#8364; + ${item.price}">Price</td>
+                <td th:text="${item.orderId}">OrderId</td>
+                <td th:text="${item.orderStatus}">Status</td>
+                <td th:text="${item.address}">Shipment Address</td>
+                <td th:text="${item.status}">Payment</td>
+                <td>
+                    <a th:disabled="${(item.buyer.id == userId && item.isMarkedByBuyer()) || (item.seller.id == userId && item.isMarkedBySeller()) }" class="btn btn-primary mt 4" th:classappend="${(item.buyer.id == userId && item.isMarkedByBuyer()) || (item.seller.id == userId && item.isMarkedBySeller())} ?  disabled: active" th:href="@{'/changeTransactionStatusPP/' + ${item.orderId}}">Mark as Complete</a>
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <select th:id="'rating-' + ${item.orderId}" style="padding: 5px; font-size: 14px; font-family: Arial, sans-serif; border: 1px solid #ccc; border-radius: 4px; background-color: #fff; appearance: none; -webkit-appearance: none; -moz-appearance: none;">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <button th:onclick="'submitRating(' + ${item.seller.id} + ', ' + '\'rating-' + ${item.orderId} + '\'' + ')'" class="btn btn-primary" style="padding: 6px 12px; font-size: 14px; font-weight: 400; line-height: 1.5; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; border-radius: 4px; background-color: #007bff; color: #fff; transition: all 0.2s ease-in-out;">Submit Rating</button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h3>Sold Items</h3>
+        <table class="table">
+            <thead class="thead-green">
+            <tr>
+                <th>Image</th>
+                <th>Item Name</th>
+                <th>&#8364; Price</th>
+                <th>OrderId</th>
+                <th>Status</th>
+                <th>Shipment Address</th>
+                <th>Payment</th>
+                <th>Manage Transaction</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item: ${listItems}" th:if="${item.buyer.id != userId}">
+                <td><img th:src="${item.photosImagePath}" style="width: 100px; height: 100px;"></td>
+                <td th:text="${item.itemName}">Item Name</td>
+                <td th:text="&#8364; + ${item.price}">Price</td>
+                <td th:text="${item.orderId}">OrderId</td>
+                <td th:text="${item.orderStatus}">Status</td>
+                <td th:text="${item.address}">Shipment Address</td>
+                <td th:text="${item.status}">Payment</td>
+                <td>
+                    <a th:disabled="${(item.buyer.id == userId && item.isMarkedByBuyer()) || (item.seller.id == userId && item.isMarkedBySeller()) }" class="btn btn-primary mt 4" th:classappend="${(item.buyer.id == userId && item.isMarkedByBuyer()) || (item.seller.id == userId && item.isMarkedBySeller())} ?  disabled: active" th:href="@{'/changeTransactionStatusPP/' + ${item.orderId}}">Mark as Complete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script th:inline="javascript">
+    function submitRating(sellerId, ratingElementId) {
+        var rating = document.getElementById(ratingElementId).value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                alert('Seller rating submitted');
+            }
+        };
+        xhttp.open("POST", "/rateSeller/" + sellerId + "/" + rating, true);
+        xhttp.send();
+    }
+</script>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        $('#instructionsModal').modal('show');
+    });
+</script>
+</body>
+</html>

@@ -1,7 +1,9 @@
 package com.example.serviceImp;
 
+import com.example.Model.Bid;
 import com.example.Model.User;
 import com.example.Model.Item;
+import com.example.Repo.BidRepository;
 import com.example.Repo.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,15 @@ public class ItemServiceImp{
     @Autowired
     private ItemRepository itemRepository;
 
+    @Autowired
+    private BidRepository bidRepository;
+
     public List<Item> listItems(User user) {
 
         return itemRepository.findByUser(user);
+    }
+    public Item findById(long id) {
+        return itemRepository.findByItemId(id);
     }
 
     public List<Item> itemsList(String keyword) {
@@ -40,4 +48,9 @@ public class ItemServiceImp{
     public void delete(Long itemId) {
         itemRepository.deleteById(itemId);
     }
+
+    public void saveBid(Bid bid) {
+        bidRepository.save(bid);
+    }
+
 }

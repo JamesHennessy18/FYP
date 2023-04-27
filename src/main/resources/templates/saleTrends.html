@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>[[${pageTitle}]]</title>
+<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+</head>
+
+
+<body>
+
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">MarketSwipe</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav me-auto mb-2 mb-md-0">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" th:href="@{/home_page}">Shop Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/listItems}">List a Product</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/products}"> My Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/chat}"> My Messages</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						My Orders
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/transactions}">Crypto Orders</a>
+						<a class="dropdown-item" th:href="@{/payPalTransactions}">PayPal Orders</a>
+						<a class="dropdown-item" th:href="@{/bidding}">View Bids</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						My Account
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/myAccount}">Account Details</a>
+						<a class="dropdown-item" th:href="@{/viewWallet}">Wallet Details</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Trending
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/trending}">Market Trends</a>
+						<a class="dropdown-item" th:href="@{/saleTrends}">Past Sales</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/crypto}"> Crypto Markets</a>
+				</li>
+
+
+			</ul>
+
+		</div>
+	</div>
+
+	<li class="nav-item">
+		<div class="cont text-center">
+			<form th:action="@{/logout}" method="post">
+				<p style="color:green;">
+					Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+				</p>
+				<input type="submit" value="Sign Out" />
+			</form>
+		</div>
+	</li>
+</nav>
+
+<div class="container text-center">
+	<h1 style="color:green;">View Recent Sales</h1>
+</div>
+<div class="search-form" style="text-align: center; margin-top: 30px;">
+	<form th:action="@{/saleTrends}" style="display: inline-flex; max-width: 400px;">
+		<input type="text" name="view" placeholder="Search item..." th:value="${view}" required
+			   style="flex-grow: 1; border: 1px solid #ccc; padding: 8px 16px; border-radius: 4px 0 0 4px; outline: none;"/>
+		<button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 8px 16px; cursor: pointer; border-radius: 0 4px 4px 0;">
+			Search
+		</button>
+	</form>
+</div>
+
+
+
+<div style="width: 80%; height: 400px; margin: 0 auto;">
+	<canvas id="itemSalesChart" style="width: 100%; height: 100%;"></canvas>
+</div>
+
+<script th:inline="javascript" type="text/javascript">
+  let lastFiveSoldItems = /*[[${lastFiveSoldItems}]]*/ [];
+  let itemNames = lastFiveSoldItems.map(item => item.itemName + ' (' + item.timestamp.substring(0, 10) + ')');
+  let itemPrices = lastFiveSoldItems.map(item => item.itemPrice);
+
+  let ctx = document.getElementById('itemSalesChart').getContext('2d');
+  let itemSalesChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: itemNames,
+      datasets: [{
+        label: '\u20AC Item Price',
+        data: itemPrices,
+        backgroundColor: 'rgba(75, 192, 192, 0.5)'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'Last Five Sales'
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top'
+        }
+      }
+    }
+  });
+</script>
+
+
+</body>
+</html>
+

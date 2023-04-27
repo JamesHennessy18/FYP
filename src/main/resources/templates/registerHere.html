@@ -6,11 +6,7 @@
 <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <style>
-body {
-  background-image: url('Register.png');
-  background-size: cover;
-  
-}
+
 </style>
 <body>
 	<div class="container text-center">
@@ -25,6 +21,7 @@ body {
 				<label class="col-4 col-form-label">E-mail: </label>
 				<div class="col-8">
 					<input type="email" th:field="*{email}" class="form-control" required />
+					<span th:if="${emailExistsError}" th:text="${emailExistsError}" class="text-danger"></span>
 				</div>
 			</div>
 			
@@ -50,6 +47,41 @@ body {
 					<input type="text" th:field="*{lastName}" class="form-control" 
 							required minlength="2" maxlength="20" />
 				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-4 col-form-label">Address Line 1: </label>
+				<div class="col-8">
+					<input type="text" th:field="*{address1}" class="form-control"
+						   required minlength="2" maxlength="20" />
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-4 col-form-label">Address Line 2 </label>
+				<div class="col-8">
+					<input type="text" th:field="*{address2}" class="form-control"
+						   required minlength="2" maxlength="20" />
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-4 col-form-label">Country: </label>
+				<div class="col-8">
+					<select name="category" th:field="*{country}" class="form-control">
+						<option value="Ireland">Ireland</option>
+						<option value="England">England</option>
+						<option value="Scotland">Scotland</option>
+						<option value="Wales">Wales</option>
+						<option value="Italy">Italy</option>
+						<option value="France">France</option>
+						<option value="USA">USA</option>
+						<option value="Spain">Spain</option>
+						<option value="Germany">Germany</option>
+					</select>
+				</div>
+
+
 			</div>
 			
 			<div>

@@ -50,13 +50,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// TODO Auto-generated method stub
-		http.authorizeRequests().antMatchers("/home_page").authenticated()
-		.anyRequest().permitAll().and().formLogin().usernameParameter("email")
-		.defaultSuccessUrl("/home_page").permitAll().and().logout().logoutSuccessUrl("/").permitAll();
+
+		http.csrf().disable().authorizeRequests().antMatchers("/home_page").hasAnyAuthority("CUSTOMER")
+				.antMatchers("/admin_home").hasAnyAuthority("ADMIN")
+				.antMatchers("/invoice/**").permitAll()
+				.antMatchers("/app/**").permitAll()
+				.antMatchers("/app.js").permitAll()
+				.antMatchers("/main.css").permitAll()
+		.anyRequest().permitAll().and().formLogin().usernameParameter("email").successHandler(loginSuccessHandler)
+
+		.permitAll().and().logout().logoutSuccessUrl("/").permitAll();
 	}
-	
-	
+
+	@Autowired private LoginSuccessHandler loginSuccessHandler;
 	
 	
 }

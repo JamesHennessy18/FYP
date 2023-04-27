@@ -1,9 +1,14 @@
 package com.example.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
+import com.example.Model.Role;
 import com.example.Model.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
@@ -17,8 +22,16 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Role> roles = user.getRoles();
+		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+		for (Role role : roles) {
+			authorities.add(new SimpleGrantedAuthority(role.getName()));
+		}
+		return authorities;
+	}
+	public boolean hasRole(String roleName) {
+		return this.user.hasRole(roleName);
 	}
 
 	@Override
@@ -71,5 +84,17 @@ public class CustomUserDetails implements UserDetails {
 
 	public String getEmail() {
 		return user.getEmail();
+	}
+
+	public String getAddress1() {
+		return user.getAddress1();
+	}
+
+	public String getAddress2() {
+		return user.getAddress2();
+	}
+
+	public String getCountry() {
+		return user.getCountry();
 	}
 }

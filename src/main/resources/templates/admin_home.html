@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>List Users</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+  background-image: url('BGColour.png');
+  background-size: cover;
+}
+    </style>
+
+    <style>
+* {
+  box-sizing: border-box;
+}
+
+.columns {
+  float: left;
+  width: 33.3%;
+  padding: 8px;
+}
+
+.price {
+  list-style-type: none;
+  border: 1px solid #eee;
+  margin: 0;
+  padding: 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.price:hover {
+  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2)
+}
+
+.price .header {
+  background-color: #111;
+  color: white;
+  font-size: 25px;
+}
+
+.price li {
+  border-bottom: 1px solid #eee;
+  padding: 20px;
+  text-align: center;
+}
+
+.price .grey {
+  background-color: #eee;
+  font-size: 20px;
+}
+
+.button {
+  background-color: #05762E;
+  border: none;
+  color: white;
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+@media only screen and (max-width: 600px) {
+  .columns {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">MarketSwipe</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/admin_home}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/adminProd}">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/users}"> Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/viewOrders}"> Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/adminInfo}"> Account</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <li class="nav-item">
+        <div class="container text-center">
+            <form th:action="@{/logout}" method="post">
+                <p style="color:green;">
+                    Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+                </p>
+                <input type="submit" value="Sign Out" />
+            </form>
+        </div>
+    </li>
+</nav>
+<br>
+<br>
+        <br>
+        <br>
+        <br>
+        <div class="container text-center">
+            <h1>Admin Home</h1>
+        </div>
+
+
+<div class="columns">
+<ul class="price">
+    <li class="header" style="background-color:#05762E">User Management</li>
+    <li class="grey">User Page</li>
+    <li>View Users</li>
+    <li>Delete Users</li>
+    <li class="grey"><a th:href="@{/users}" class="button">Go Now</a></li>
+</ul>
+</div>
+
+<div class="columns">
+    <ul class="price">
+        <li class="header" style="background-color:#05762E">Product Management</li>
+        <li class="grey">Product Page</li>
+        <li>View Products</li>
+        <li>Delete Products</li>
+        <li class="grey"><a th:href="@{/adminProd}" class="button">Go Now</a></li>
+    </ul>
+</div>
+
+<div class="columns">
+    <ul class="price">
+        <li class="header" style="background-color:#05762E">Order Management</li>
+        <li class="grey">Order Page</li>
+        <li>View Orders</li>
+        <li>Release Funds</li>
+        <li class="grey"><a href="#" class="button">Go Now</a></li>
+    </ul>
+</div>
+
+<div class="title text-center">
+<h2 style="color:green;">Our top-selling Products by Category</h2>
+</div>
+<div style="width: 80%; height: 400px; margin: 0 auto;">
+    <canvas id="categorySalesChart" style="width: 100%; height: 100%;"></canvas>
+</div>
+
+<div class="title text-center">
+    <h2 style="color:green;">How Many Orders are Fulfilled</h2>
+</div>
+
+<div style="width: 80%; height: 400px; margin: 0 auto;">
+    <canvas id="statusBarChart" style="width: 100%; height: 100%;"></canvas>
+</div>
+
+<div class="container text-center">
+    <h1>Live Crypto Markets</h1>
+</div>
+
+<br>
+<br>
+<br>
+<center>
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/cryptocurrencies/prices-all/" rel="noopener" target="_blank"><span class="blue-text">Crypto markets</span></a> by TradingView</div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+  {
+  "width": "1800",
+  "height": "600",
+  "defaultColumn": "overview",
+  "screener_type": "crypto_mkt",
+  "displayCurrency": "EUR",
+  "colorTheme": "light",
+  "locale": "en",
+  "isTransparent": true
+}
+  </script>
+</div>
+</center>
+
+<script th:inline="javascript">
+
+  let categorySalesData = /*[[${categorySales}]]*/ [];
+  let labels = categorySalesData.map(data => data[0]);
+  let counts = categorySalesData.map(data => data[1]);
+
+  // Create the pie chart
+  let ctx = document.getElementById('categorySalesChart').getContext('2d');
+  let categorySalesChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: counts,
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.5)', // Outdoor
+          'rgba(255, 206, 86, 0.5)', // Camera
+          'rgba(255, 99, 132, 0.5)', // Vehicles
+          'rgba(153, 102, 255, 0.5)' // Sports
+        ],
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'Category Sales'
+      }
+    }
+  });
+</script>
+<script th:inline="javascript">
+  let statusCountsData = /*[[${statusCounts}]]*/ [];
+  let statusLabels = statusCountsData.map(data => data[0]);
+  let statusCounts = statusCountsData.map(data => data[1]);
+
+  let backgroundColors = [
+    'rgba(75, 192, 192, 0.5)',
+    'rgba(255, 206, 86, 0.5)',
+    'rgba(255, 99, 132, 0.5)',
+    'rgba(153, 102, 255, 0.5)'
+  ];
+
+  let statusCtx = document.getElementById('statusBarChart').getContext('2d');
+  let statusBarChart = new Chart(statusCtx, {
+    type: 'bar',
+    data: {
+      labels: statusLabels,
+      datasets: statusLabels.map((label, index) => {
+        return {
+          label: label,
+          data: statusCountsData.map(data => data[0] === label ? data[1] : 0),
+          backgroundColor: backgroundColors[index],
+        };
+      }),
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'Status Counts'
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top'
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

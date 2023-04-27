@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="ISO-8859-1">
+	<title> MarketSwipe </title>
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+	<style>
+
+	body {
+  background-image: url('MarketSwipe.png');
+  background-size: cover;
+}
+		b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+
+
+
+.body-wrap {
+
+    width: 100%;
+}
+
+.container {
+    display: block !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
+    /* makes it centered */
+    clear: both !important;
+}
+
+.content {
+    max-width: 600px;
+    margin: 0 auto;
+    display: block;
+    padding: 20px;
+}
+
+/* -------------------------------------
+    HEADER, FOOTER, MAIN
+------------------------------------- */
+.main {
+    background: #fff;
+    border: 1px solid #e9e9e9;
+    border-radius: 3px;
+}
+
+.content-wrap {
+    padding: 20px;
+}
+
+.content-block {
+    padding: 0 0 20px;
+}
+
+.header {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.footer {
+    width: 100%;
+    clear: both;
+    color: #999;
+    padding: 20px;
+}
+.footer a {
+    color: #999;
+}
+.footer p, .footer a, .footer unsubscribe, .footer td {
+    font-size: 12px;
+}
+
+/* -------------------------------------
+    TYPOGRAPHY
+------------------------------------- */
+h1, h2, h3 {
+    font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    color: #000;
+    margin: 40px 0 0;
+    line-height: 1.2;
+    font-weight: 400;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: 500;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+h4 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+p, ul, ol {
+    margin-bottom: 10px;
+    font-weight: normal;
+}
+p li, ul li, ol li {
+    margin-left: 5px;
+    list-style-position: inside;
+}
+
+/* -------------------------------------
+    LINKS & BUTTONS
+------------------------------------- */
+a {
+    color: #1ab394;
+    text-decoration: underline;
+}
+
+.btn-primary {
+    text-decoration: none;
+    color: #FFF;
+    background-color: #1ab394;
+    border: solid #1ab394;
+    border-width: 5px 10px;
+    line-height: 2;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 5px;
+    text-transform: capitalize;
+}
+
+/* -------------------------------------
+    OTHER STYLES THAT MIGHT BE USEFUL
+------------------------------------- */
+.last {
+    margin-bottom: 0;
+}
+
+.first {
+    margin-top: 0;
+}
+
+.aligncenter {
+    text-align: center;
+}
+
+.alignright {
+    text-align: right;
+}
+
+.alignleft {
+    text-align: left;
+}
+
+.clear {
+    clear: both;
+}
+
+/* -------------------------------------
+    ALERTS
+    Change the class depending on warning email, good email or bad email
+------------------------------------- */
+.alert {
+    font-size: 16px;
+    color: #fff;
+    font-weight: 500;
+    padding: 20px;
+    text-align: center;
+    border-radius: 3px 3px 0 0;
+}
+.alert a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+}
+.alert.alert-warning {
+    background: #f8ac59;
+}
+.alert.alert-bad {
+    background: #ed5565;
+}
+.alert.alert-good {
+    background: #1ab394;
+}
+
+/* -------------------------------------
+    INVOICE
+    Styles for the billing table
+------------------------------------- */
+.invoice {
+    margin: 40px auto;
+    text-align: left;
+    width: 80%;
+}
+.invoice td {
+    padding: 5px 0;
+}
+.invoice .invoice-items {
+    width: 100%;
+}
+.invoice .invoice-items td {
+    border-top: #eee 1px solid;
+}
+.invoice .invoice-items .total td {
+    border-top: 2px solid #333;
+    border-bottom: 2px solid #333;
+    font-weight: 700;
+}
+
+/* -------------------------------------
+    RESPONSIVE AND MOBILE FRIENDLY STYLES
+------------------------------------- */
+@media only screen and (max-width: 640px) {
+    h1, h2, h3, h4 {
+        font-weight: 600 !important;
+        margin: 20px 0 5px !important;
+    }
+
+    h1 {
+        font-size: 22px !important;
+    }
+
+    h2 {
+        font-size: 18px !important;
+    }
+
+    h3 {
+        font-size: 16px !important;
+    }
+
+    .container {
+        width: 100% !important;
+    }
+
+    .content, .content-wrap {
+        padding: 10px !important;
+    }
+
+    .invoice {
+        width: 100% !important;
+    }
+}
+	</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">MarketSwipe</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav me-auto mb-2 mb-md-0">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" th:href="@{/home_page}">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/listItems}">List Product</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/products}"> My Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/myAccount}"> My Account</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/crypto}"> Crypto Markets</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/chat}"> Messages</a>
+				</li>
+			</ul>
+
+		</div>
+		<li class="nav-item">
+			<div class="container text-center">
+				<form th:action="@{/logout}" method="post">
+					<p style="color:green;">
+						Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+					</p>
+					<input type="submit" value="Sign Out" />
+				</form>
+			</div>
+		</li>
+	</div>
+
+</nav>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<table class="body-wrap">
+	<tbody><tr>
+		<td></td>
+		<td class="container" width="600">
+			<div class="content">
+				<table class="main" width="100%" cellpadding="0" cellspacing="0">
+					<tbody><tr>
+						<td class="content-wrap aligncenter">
+							<table width="100%" cellpadding="0" cellspacing="0">
+								<tbody><tr>
+									<td class="content-block">
+										<h2>Almost there...</h2>
+									</td>
+								</tr>
+								<tr>
+									<td class="content-block">
+										<table class="invoice">
+											<tbody><tr>
+												<td th:text="${item.itemName}">Product: </td>
+											</tr>
+											<tr>
+												<td th:text="${item.itemDesc}">Product: </td>
+											</tr>
+											<tr>
+												<td>
+													<table class="invoice-items" cellpadding="0" cellspacing="0">
+														<tbody><tr>
+															<td th:text="'&#8364;' + ${item.itemPrice}">Product Price</td>
+															<td class="alignright">$ 20.00</td>
+														</tr>
+
+
+														<tr class="total">
+															<td class="alignright" width="80%">Total</td>
+															<td class="alignright" th:text="'&#8364;' + ${item.itemPrice}"></td>
+															<p class="id" style="visibility: hidden" th:text="*{item.itemId}"></p>
+															<p class="sellerId" style="visibility: hidden" th:text="*{item.user.id}"></p>
+															<p class="buyerId" style="visibility: hidden" th:text="*{buyerId}"></p>
+														</tr>
+														</tbody></table>
+												</td>
+											</tr>
+											</tbody></table>
+										<form method="post"  th:action="@{/pay}">
+											<a class="btn btn-primary mt 4" onclick="payWithCrypto()" >Pay Via Crypto</a>
+
+									</td>
+								</tr>
+
+								<tr>
+
+									<td class="content-block">
+										<a th:href="@{/home_page}">Second thoughts? Go to Home</a>
+									</td>
+								</tr>
+								<tr>
+									<td class="content-block">
+										MarketSwipe.com
+									</td>
+								</tr>
+								</tbody></table>
+						</td>
+					</tr>
+					</tbody></table>
+				<div class="footer">
+					<table width="100%">
+						<tbody><tr>
+							<td class="aligncenter content-block">Questions? Email <a href="mailto:">MarketSwipeSupport@gmail.com</a></td>
+						</tr>
+						</tbody></table>
+				</div></div>
+		</td>
+		<td></td>
+	</tr>
+	</tbody></table>
+<script type="text/javascript">
+
+	async function postData(url = "", data = {}) {
+		// Default options are marked with *
+		const response = await fetch(url, {
+			method: "POST", // *GET, POST, PUT, DELETE, etc.
+			mode: "cors", // no-cors, *cors, same-origin
+			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+			credentials: "same-origin", // include, *same-origin, omit
+			headers: {
+				"Content-Type": "application/json",
+			},
+			redirect: "follow", // manual, *follow, error
+			referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+			body: JSON.stringify(data), // body data type must match "Content-Type" header
+		});
+		return response.json(); // parses JSON response into native JavaScript objects
+	}
+
+	function payWithCrypto() {
+		postData("http://localhost:8080/invoice", {
+			"orderId": +document.getElementsByClassName("id")[0].innerHTML,
+			"buyerId": +document.getElementsByClassName("buyerId")[0].innerHTML,
+			"sellerId": +document.getElementsByClassName("sellerId")[0].innerHTML
+		}).then((data) => {
+			window.location.href=data.payment_url;
+		});
+	}
+
+</script>
+</body>
+</html>
+

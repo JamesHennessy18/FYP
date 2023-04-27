@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	  xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="ISO-8859-1">
+	<title>List products</title>
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+	<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">MarketSwipe</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav me-auto mb-2 mb-md-0">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" th:href="@{/home_page}">Shop Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/listItems}">List a Product</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/products}"> My Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/chat}"> My Messages</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						My Orders
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/transactions}">Crypto Orders</a>
+						<a class="dropdown-item" th:href="@{/payPalTransactions}">PayPal Orders</a>
+						<a class="dropdown-item" th:href="@{/bidding}">View Bids</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						My Account
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/myAccount}">Account Details</a>
+						<a class="dropdown-item" th:href="@{/viewWallet}">Wallet Details</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Trending
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/trending}">Market Trends</a>
+						<a class="dropdown-item" th:href="@{/saleTrends}">Past Sales</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/crypto}"> Crypto Markets</a>
+				</li>
+
+
+			</ul>
+
+		</div>
+	</div>
+
+	<li class="nav-item">
+		<div class="cont text-center">
+			<form th:action="@{/logout}" method="post">
+				<p style="color:green;">
+					Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+				</p>
+				<input type="submit" value="Sign Out" />
+			</form>
+		</div>
+	</li>
+</nav>
+<div class="container text-center border border-secondary rounded p-2">
+	<div th:if="${message}" class ="alert alert-success text-center">
+		[[${message}]]
+	</div>
+	<h2 style="color:green">My Details</h2>
+
+
+		<form th:action="@{/updateWallet}" th:object="${wallet}" method="post" style="max-width: 600px; margin: 0 auto;">
+			<div class="form-group">
+				<label for="paypalEmail">PayPal Email:</label>
+				<input type="text" class="form-control" id="paypalEmail" th:field="*{paypalEmail}" required minlength="2" maxlength="20" />
+			</div>
+			<div class="form-group">
+				<label for="cryptoCurrency">Crypto Currency:</label>
+				<input type="text" class="form-control" id="cryptoCurrency" th:field="*{cryptoCurrency}" required minlength="2" maxlength="20"/>
+			</div>
+			<div class="form-group">
+				<label for="cryptoAddress">Crypto Wallet Address:</label>
+				<input type="text" class="form-control" id="cryptoAddress" th:field="*{cryptoAddress}" required minlength="2" maxlength="100"/>
+			</div>
+			<button type="submit" class="btn btn-primary">Update Wallet</button>
+		</form>
+	</div>
+</body>
+</html>
+

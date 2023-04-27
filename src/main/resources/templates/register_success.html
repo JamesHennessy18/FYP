@@ -6,15 +6,25 @@
 <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <style>
-body {
-  background-image: url('regSuc.mp4');
-  background-size: cover;
-}
+<style>
+    .login-link {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .login-link:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
 </style>
 <body>
 	<div class="container text-center">
 	<h1 style="color:green;"> You have signed up successfully!</h1>
-	<h4><a th:href="@{/login}">Login here</a></h4>
+		<img src="logo.png"/>
+		<h4><a th:href="@{/login}" class="login-link">Login here</a></h4>
+
 </div>
 
 </body>

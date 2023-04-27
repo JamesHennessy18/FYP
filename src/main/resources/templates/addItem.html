@@ -4,70 +4,104 @@
 <meta charset="ISO-8859-1">
 <title>[[${pageTitle}]]</title>
 <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 </head>
-<style>
-body {
-  background-image: url('sell.png');
-  background-size: cover;
-}
-</style>
-<body>
-
-
-
-		<nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
-			<div class="container-fluid">
-				<a class="navbar-brand" href="#">MarketSwipe</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarCollapse">
-					<ul class="navbar-nav me-auto mb-2 mb-md-0">
-						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" th:href="@{/home_page}">Home</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" th:href="@{/listItems}">List Product</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" th:href="@{/products}"> My Products</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" th:href="@{/myAccount}"> My Account</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" th:href="@{/crypto}"> Crypto Markets</a>
-						</li>
-					</ul>
-					<form class="d-flex" role="search">
-						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-						<button class="btn btn-outline-success" type="submit">Search</button>
-					</form>
-				</div>
+<div class="modal fade" id="instructionsModal" role="dialog" aria-labelledby="instructionsModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content" style="width: 80%; height: 100%;">
+			<div class="modal-header">
+				<h5 class="modal-title" id="instructionsModalLabel">Thinking of selling an item?</h5>
 			</div>
-			<li class="nav-item">
-				<div class="container text-center">
-					<form th:action="@{/logout}" method="post">
-						<p style="color:green;">
-							Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
-						</p>
-						<input type="submit" value="Sign Out" />
-					</form>
-				</div>
-			</li>
-		</nav>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
+			<div class="modal-body">
+				<p>You are about to list an item for sale, here are some things to note: </p>
+				<p>Here at MarketSwipe, we want you to get a fair amount for your product, check out the recent sales of the item you want to sell <a th:href="@{/saleTrends}">here</a>.</p>
+				<p>Make sure to fulfill all orders once your item is purchased or you will not receive the payment.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">MarketSwipe</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav me-auto mb-2 mb-md-0">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" th:href="@{/home_page}">Shop Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/listItems}">List a Product</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/products}"> My Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/chat}"> My Messages</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						My Orders
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/transactions}">Crypto Orders</a>
+						<a class="dropdown-item" th:href="@{/payPalTransactions}">PayPal Orders</a>
+						<a class="dropdown-item" th:href="@{/bidding}">View bids</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						My Account
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/myAccount}">Account Details</a>
+						<a class="dropdown-item" th:href="@{/viewWallet}">Wallet Details</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Trending
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/trending}">Market Trends</a>
+						<a class="dropdown-item" th:href="@{/saleTrends}">Past Sales</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/crypto}"> Crypto Markets</a>
+				</li>
+
+
+			</ul>
+
+		</div>
+	</div>
+
+	<li class="nav-item">
+		<div class="cont text-center">
+			<form th:action="@{/logout}" method="post">
+				<p style="color:green;">
+					Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+				</p>
+				<input type="submit" value="Sign Out" />
+			</form>
+		</div>
+	</li>
+</nav>
 	
 </div>
 
-		<div class="container text-center">
+		<div class="container text-center border border-secondary rounded p-2">
 			<h1 style="color:green;">[[${pageTitle}]]</h1>
 	<form th:action="@{/products/save}" th:object="${item}"
-		  method="post" enctype="multipart/form-data" style="max-width: 600px; margin: 0 auto;">
+		  method="post" enctype="multipart/form-data" style="max-width: 600px; margin: 0 auto">
 		<input type="hidden" th:field="*{itemId}">
 		<div class="m-3">
 			<div class="form-group row">
@@ -78,7 +112,7 @@ body {
 			</div>
 
 			<div class="form-group row">
-				<label class="col-4 col-form-label">Price: </label>
+				<label class="col-4 col-form-label">Price (&#8364;): </label>
 				<div class="col-8">
 					<input type="text" th:field="*{itemPrice}" class="form-control"
 						   required minlength="0" maxlength="10"/>
@@ -88,8 +122,8 @@ body {
 			<div class="form-group row">
 				<label class="col-4 col-form-label">Description: </label>
 				<div class="col-8">
-					<input type="text" th:field="*{itemDesc}" class="form-control"
-						   required minlength="2" maxlength="40"/>
+					<textarea th:field="*{itemDesc}" class="form-control"
+							  required minlength="2" maxlength="200"></textarea>
 				</div>
 			</div>
 
@@ -99,24 +133,23 @@ body {
 					<select name="category" th:field="*{category}" class="form-control">
 						<option value="Outdoor">Outdoor</option>
 						<option value="Camera">Camera</option>
-						<option value="Sports">Outdoor</option>
+						<option value="Sports">Sports</option>
 						<option value="Vehicles">Vehicles</option>
 						<option value="Home Furniture">Home Furniture</option>
 						<option value="Garden Furniture">Garden Furniture</option>
 						<option value="Phone">Phone</option>
-						<option value="Laptop">Laptop</option>
 						<option value="Clothing">clothing</option>
 					</select>
 				</div>
 
 
 			</div>
-			<div class="form-group row">
-				<label class="col-4 col-form-label">Image: </label>
-				<div class="col-8">
-					<input type="file" name="file" class="form-control" accept="image/png, image/jpeg" required minlength="2" maxlength="20"/>
-				</div>
 
+			<div class="form-group row">
+				<label class="col-4 col-form-label">Images: </label>
+				<div class="col-8">
+					<input type="file" name="files" class="form-control" accept="image/png, image/jpeg" multiple required minlength="2" />
+				</div>
 			</div>
 
 
@@ -127,7 +160,12 @@ body {
 			</div>
 		</div>
 	</form>
-
+		</div>
+			<script th:inline="javascript">
+    $(document).ready(function() {
+        $('#instructionsModal').modal('show');
+    });
+</script>
 </body>
 </html>
 

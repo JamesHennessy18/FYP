@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>[[${pageTitle}]]</title>
+<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+</head>
+
+
+
+
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">MarketSwipe</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav me-auto mb-2 mb-md-0">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" th:href="@{/home_page}">Shop Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/listItems}">List a Product</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/products}"> My Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/chat}"> My Messages</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						My Orders
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/transactions}">Crypto Orders</a>
+						<a class="dropdown-item" th:href="@{/payPalTransactions}">PayPal Orders</a>
+						<a class="dropdown-item" th:href="@{/bidding}">View Bids</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						My Account
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/myAccount}">Account Details</a>
+						<a class="dropdown-item" th:href="@{/viewWallet}">Wallet Details</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Trending
+					</a>
+					<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+						<a class="dropdown-item" th:href="@{/trending}">Market Trends</a>
+						<a class="dropdown-item" th:href="@{/saleTrends}">Past Sales</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/crypto}"> Crypto Markets</a>
+				</li>
+
+
+			</ul>
+
+		</div>
+	</div>
+
+	<li class="nav-item">
+		<div class="cont text-center">
+			<form th:action="@{/logout}" method="post">
+				<p style="color:green;">
+					Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+				</p>
+				<input type="submit" value="Sign Out" />
+			</form>
+		</div>
+	</li>
+</nav>
+
+<div class="title text-center">
+	<h2 style="color:green;">Crypto Vs PayPal</h2>
+</div>
+<div style="width: 80%; height: 400px; margin: 0 auto;">
+	<canvas id="totalSalesChart" style="width: 100%; height: 100%;"></canvas>
+</div>
+<div class="title text-center">
+	<h2 style="color:green;">Top-selling Categories</h2>
+</div>
+<div class="charts-container" style="display: flex; justify-content: center;">
+	<div style="width: 50%; height: 400px;">
+		<h3 style="color:green; text-align: center;"> Crypto</h3>
+		<canvas id="categorySalesChart" style="width: 100%; height: 100%;"></canvas>
+	</div>
+
+	<div style="width: 50%; height: 400px;">
+		<h3 style="color:green; text-align: center;"> PayPal</h3>
+		<canvas id="payPalCategorySalesChart" style="width: 100%; height: 100%;"></canvas>
+	</div>
+</div>
+
+
+<div class="title text-center">
+	<h2 style="color:green;">Order Fullfillment</h2>
+	<h2 style="color:green;">Crypto</h2>
+</div>
+
+<div style="width: 80%; height: 400px; margin: 0 auto;">
+	<canvas id="statusBarChart" style="width: 100%; height: 100%;"></canvas>
+</div>
+
+<div class="title text-center">
+	<h2 style="color:green;">PayPal</h2>
+</div>
+
+<div style="width: 80%; height: 400px; margin: 0 auto;">
+	<canvas id="payPalStatusBarChart" style="width: 100%; height: 100%;"></canvas>
+</div>
+
+<script th:inline="javascript">
+   let transactionTotalSales = /*[[${transactionTotalSales}]]*/ '0';
+  let payPalTotalSales = /*[[${payPalTotalSales}]]*/ '0';
+  let totalLabels = ['Crypto', 'PayPal'];
+  let totalCounts = [transactionTotalSales, payPalTotalSales];
+
+  // Create the total sales pie chart
+  let totalCtx = document.getElementById('totalSalesChart').getContext('2d');
+  let totalSalesChart = new Chart(totalCtx, {
+    type: 'pie',
+    data: {
+      labels: totalLabels,
+      datasets: [{
+        data: totalCounts,
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.5)', // TransactionOrder
+          'rgba(255, 206, 86, 0.5)'  // PayPalOrder
+        ],
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'Total Sales'
+      }
+    }
+  });
+</script>
+
+<script th:inline="javascript">
+
+  let categorySalesData = /*[[${categorySales}]]*/ [];
+  let labels = categorySalesData.map(data => data[0]);
+  let counts = categorySalesData.map(data => data[1]);
+
+  // Create the pie chart
+  let ctx = document.getElementById('categorySalesChart').getContext('2d');
+  let categorySalesChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: counts,
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.5)', // Outdoor
+          'rgba(255, 206, 86, 0.5)', // Camera
+          'rgba(255, 99, 132, 0.5)', // Vehicles
+          'rgba(153, 102, 255, 0.5)' // Sports
+        ],
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'Category Sales'
+      }
+    }
+  });
+</script>
+<script th:inline="javascript">
+  let statusCountsData = /*[[${statusCounts}]]*/ [];
+  let statusLabels = statusCountsData.map(data => data[0]);
+  let statusCounts = statusCountsData.map(data => data[1]);
+
+  let backgroundColors = [
+    'rgba(75, 192, 192, 0.5)',
+    'rgba(255, 206, 86, 0.5)',
+    'rgba(255, 99, 132, 0.5)',
+    'rgba(153, 102, 255, 0.5)'
+  ];
+
+  let statusCtx = document.getElementById('statusBarChart').getContext('2d');
+  let statusBarChart = new Chart(statusCtx, {
+    type: 'bar',
+    data: {
+      labels: statusLabels,
+      datasets: statusLabels.map((label, index) => {
+        return {
+          label: label,
+          data: statusCountsData.map(data => data[0] === label ? data[1] : 0),
+          backgroundColor: backgroundColors[index],
+        };
+      }),
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'Status Counts'
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top'
+        }
+      }
+    }
+  });
+</script>
+
+<script th:inline="javascript">
+  let payPalCategorySalesData = /*[[${payPalCategorySales}]]*/ [];
+  let payPalLabels = payPalCategorySalesData.map(data => data[0]);
+  let payPalCounts = payPalCategorySalesData.map(data => data[1]);
+
+  // Create the PayPalOrder category sales pie chart
+  let payPalCtx = document.getElementById('payPalCategorySalesChart').getContext('2d');
+  let payPalCategorySalesChart = new Chart(payPalCtx, {
+    type: 'pie',
+    data: {
+      labels: payPalLabels,
+      datasets: [{
+        data: payPalCounts,
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.5)', // Outdoor
+          'rgba(255, 206, 86, 0.5)', // Camera
+          'rgba(255, 99, 132, 0.5)', // Vehicles
+          'rgba(153, 102, 255, 0.5)' // Sports
+        ],
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'PayPal Category Sales'
+      }
+    }
+  });
+</script>
+<script th:inline="javascript">
+  let payPalStatusCountsData = /*[[${payPalStatusCounts}]]*/ [];
+  let payPalStatusLabels = payPalStatusCountsData.map(data => data[0]);
+  let payPalStatusCounts = payPalStatusCountsData.map(data => data[1]);
+
+  let payPalStatusCtx = document.getElementById('payPalStatusBarChart').getContext('2d');
+  let payPalStatusBarChart = new Chart(payPalStatusCtx, {
+    type: 'bar',
+    data: {
+      labels: payPalStatusLabels,
+      datasets: payPalStatusLabels.map((label, index) => {
+        return {
+          label: label,
+          data: payPalStatusCountsData.map(data => data[0] === label ? data[1] : 0),
+          backgroundColor: backgroundColors[index],
+        };
+      }),
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'PayPal Status Counts'
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top'
+        }
+      }
+    }
+  });
+</script>
+
+
+</body>
+</html>
+

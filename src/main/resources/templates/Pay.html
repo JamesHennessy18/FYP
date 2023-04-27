@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="ISO-8859-1">
+	<title> MarketSwipe </title>
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+	<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+	<style>
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 16px;
+}
+
+input[type=text] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+span.price {
+  float: right;
+  color: grey;
+}
+
+
+  .row {
+    flex-direction: column-reverse;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
+
+body.yellow .img-container img:nth-child(1) {
+    opacity: 1;
+}
+body.blue .img-container img:nth-child(2) {
+    opacity: 1;
+}
+body.green .img-container img:nth-child(3) {
+    opacity: 1;
+}
+
+		.item-container {
+		margin-top: 100px;
+    border-style: groove;
+    position: relative;
+    background-color: #fff;
+    width: 850px;
+    min-height: 420px;
+    box-shadow: 10px 10px 40px 0 rgba(0, 0, 0, 0.2);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 40px;
+    padding: 24px;
+    margin-right: 20%;
+margin-left: 15%;
+
+}
+
+.img-container {
+    position: relative;
+}
+
+.img-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+}
+
+
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.colors {
+    margin: 24px;
+}
+
+
+
+.name {
+    color: #333;
+    font-size: 1.7em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+}
+
+.description {
+    color: #777;
+    text-align: justify;
+    line-height: 22px;
+    line-width: 10px
+
+}
+
+.cart {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+button.action {
+    outline: none;
+    border: 2px solid;
+    background: none;
+    padding: 8px 16px;
+    border-radius: 30px;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.4s, transform 0.4s;
+}
+
+button.action:hover {
+    transform: scale(1.05);
+}
+
+.price {
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+.prod {
+  position: absolute;
+  top: 50%;
+  left: 37.5%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  padding: 10px;
+}
+.tradingview-widget-container {
+        margin-bottom: 20px; /* add margin bottom to create space */
+    }
+	</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">MarketSwipe</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav me-auto mb-2 mb-md-0">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" th:href="@{/home_page}">Shop Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/listItems}">Product Listing</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/products}"> My Products</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/myAccount}"> My Account</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/crypto}"> Crypto Markets</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/chat}"> My Messages</a>
+				</li>
+				<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							My Orders
+						</a>
+						<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+							<a class="dropdown-item" th:href="@{/transactions}">Crypto Orders</a>
+							<a class="dropdown-item" th:href="@{/payPalTransactions}">PayPal Orders</a>
+						</div>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle active" href="#" id="ordersDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Trending
+						</a>
+						<div class="dropdown-menu" aria-labelledby="ordersDropdown">
+							<a class="dropdown-item" th:href="@{/trending}">Market Trends</a>
+							<a class="dropdown-item" th:href="@{/saleTrends}">Past Sales</a>
+						</div>
+					</li>
+
+				</ul>
+
+			</div>
+		</div>
+
+
+
+		<li class="nav-item">
+			<div class="cont text-center">
+				<form th:action="@{/logout}" method="post">
+					<p style="color:green;">
+						Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+					</p>
+					<input type="submit" value="Sign Out" />
+				</form>
+			</div>
+		</li>
+	</nav>
+
+
+	<div class="tradingview-widget-container">
+		<div class="tradingview-widget-container__widget"></div>
+		<div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/" rel="noopener" target="_blank"><span class="blue-text">Markets today</span></a> by TradingView</div>
+		<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+	  {
+	  "symbols": [
+		{
+		  "description": "dodge",
+		  "proName": "BITPANDAPRO:DOGEEUR"
+		},
+		{
+		  "description": "btc",
+		  "proName": "COINBASE:BTCEUR"
+		},
+		{
+		  "description": "Beth",
+		  "proName": "BINANCE:ETHEUR"
+		},
+		{
+		  "description": "sol",
+		  "proName": "BINANCE:SOLEUR"
+		},
+		{
+		  "description": "us",
+		  "proName": "BYBIT:USDTEUR"
+		}
+	  ],
+	  "showSymbolLogo": true,
+	  "colorTheme": "light",
+	  "isTransparent": true,
+	  "displayMode": "adaptive",
+	  "locale": "en"
+	}
+	  </script>
+	</div>
+
+
+	<div class="prod">
+
+		<div class="item-container">
+			<div class="img-container">
+				<p class="id" style="visibility: hidden" th:text="*{item.itemId}"></p>
+				<p class="sellerId" style="visibility: hidden" th:text="*{item.user.id}"></p>
+				<p class="buyerId" style="visibility: hidden" th:text="*{buyerId}"></p>
+				<img th:src="@{${item.photosImagePaths[0]}}" style="width: 400px; height: 500px;" alt="Product image">
+				<img th:src="@{${item.photosImagePaths[1]}}" style="width: 400px; height: 500px;" alt="Product image">
+				<img th:src="@{${item.photosImagePaths[2]}}" style="width: 400px; height: 500px;" alt="Product image">
+			</div>
+
+			<div class="info">
+				<div class="colors">
+					<button id="prevButton" type="button" style="font-size: 18px; background-color: transparent; border: 2px solid #000; border-radius: 50%; padding: 5px 10px; cursor: pointer; transition: background-color 0.3s ease; outline: none;">&#8249;</button>
+					<button id="nextButton" type="button" style="font-size: 18px; background-color: transparent; border: 2px solid #000; border-radius: 50%; padding: 5px 10px; cursor: pointer; transition: background-color 0.3s ease; outline: none;">&#8250;</button>
+				</div>
+				<p class="name" th:text="*{item.itemName}"></p>
+				<p class="description" th:text="*{item.itemDesc}"></p>
+				<div class="cart">
+					<input type="hidden" id="updatedItemPrice" th:value="${item.itemPrice}" />
+					<input type="hidden" id="bidPrice" th:value="${bidPrice}" />
+
+					<p class="price" th:text="'&#8364;' + ${displayPrice}"></p>
+
+					<a class="btn btn-primary mt-4" th:href="${bidPrice != null} ? @{/paypalRec(item=${item.itemId}, bidPrice=${displayPrice}, item=${item.itemDesc}, item=${item.itemName})} : @{/paypalRec(item=${item.itemId}, bidPrice=${displayPrice}, item=${item.itemDesc}, item=${item.itemName})}" style="border-radius:10px; background-color:black; color: white; width: 250px;">Pay Via PayPal</a>
+
+					<a class="btn btn-primary mt 4" onclick="payWithCrypto()" style="
+		border-radius:10px; background-color:black; color: white; width: 250px;">Pay Via Crypto</a>
+				</div>
+				<form th:action="@{/submitBid}" method="post" style="display: flex; flex-direction: column; align-items: center; padding: 20px;">
+					<input type="hidden" name="itemId" th:value="${item.itemId}" />
+					<label for="amountOffered" style="margin-bottom: 10px;">Bid Amount:</label>
+					<input type="number" id="amountOffered" name="amountOffered" min="1" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; margin-bottom: 20px;" />
+					<input type="submit" value="Submit Bid" style="
+		border-radius:10px; background-color:black; color: white; width: 250px;" />
+				</form>
+
+
+
+
+			</div>
+		</div>
+
+	</div>
+
+
+<script type="text/javascript">
+
+	async function postData(url = "", data = {}) {
+		// Default options are marked with *
+		const response = await fetch(url, {
+			method: "POST", // *GET, POST, PUT, DELETE, etc.
+			mode: "cors", // no-cors, *cors, same-origin
+			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+			credentials: "same-origin", // include, *same-origin, omit
+			headers: {
+				"Content-Type": "application/json",
+			},
+			redirect: "follow", // manual, *follow, error
+			referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+			body: JSON.stringify(data), // body data type must match "Content-Type" header
+		});
+		return response.json(); // parses JSON response into native JavaScript objects
+	}
+
+	function payWithCrypto() {
+		postData("http://localhost:8080/invoice", {
+			"orderId": +document.getElementsByClassName("id")[0].innerHTML,
+			"buyerId": +document.getElementsByClassName("buyerId")[0].innerHTML,
+			"sellerId": +document.getElementsByClassName("sellerId")[0].innerHTML
+		}).then((data) => {
+			window.location.href=data.payment_url;
+		});
+	}
+
+</script>
+
+
+<script>
+  const nextButton = document.getElementById('nextButton');
+  const prevButton = document.getElementById('prevButton');
+  const images = document.querySelectorAll('.img-container img');
+
+  let currentImageIndex = 0;
+
+  function updateImageVisibility() {
+    images.forEach((img, index) => {
+      img.style.display = index === currentImageIndex ? 'block' : 'none';
+    });
+  }
+
+  nextButton.addEventListener('click', () => {
+    currentImageIndex = (currentImageIndex + 1) % images.length;
+    updateImageVisibility();
+  });
+
+  prevButton.addEventListener('click', () => {
+    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+    updateImageVisibility();
+  });
+
+  updateImageVisibility();
+</script>
+</body>
+</html>
+
