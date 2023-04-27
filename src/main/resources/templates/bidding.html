@@ -181,8 +181,9 @@
         <td th:text="${bid.amountOffered}"></td>
         <td th:text="${bid.status}"></td>
         <td>
-            <a th:if="${bid.status == 'Accepted'}" th:href="@{/PayPal(item=${bid.item.itemId}, bidPrice=${bid.amountOffered})}" class="btn btn-primary">Buy Now</a>
+            <a th:if="${bid.status == 'Accepted'}" th:href="@{/PayPal(item=${bid.item.itemId}, bidPrice=${bid.amountOffered})}" th:attr="disabled=${!bid.item.isAvailable}" class="btn btn-primary">Buy Now</a>
         </td>
+
     </tr>
     </tbody>
 </table>
