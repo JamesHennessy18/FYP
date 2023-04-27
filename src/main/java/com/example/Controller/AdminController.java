@@ -3,13 +3,17 @@ package com.example.Controller;
 import com.example.Model.Item;
 import com.example.Model.TransactionOrder;
 import com.example.Model.User;
+import com.example.Model.Wallet;
 import com.example.Repo.ItemRepository;
 import com.example.Repo.TransactionOrderRepository;
 import com.example.Repo.UserRepository;
+import com.example.Repo.WalletRepository;
 import com.example.Service.CustomUserDetails;
 import com.example.serviceImp.CustomUserDetailsService;
 import com.example.serviceImp.ItemServiceImp;
 import com.example.serviceImp.TransactionServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
@@ -25,7 +29,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class AdminController {
@@ -40,6 +46,9 @@ public class AdminController {
     private ItemRepository itemRepository;
     @Autowired
     private CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    private WalletRepository walletRepository;
 
     @Autowired
     private TransactionOrderRepository transactionService;
@@ -98,9 +107,21 @@ public class AdminController {
 
     @GetMapping("/viewOrders")
     public String getOrders(Model model) throws IOException {
-        List<TransactionOrder> itemsList =  transactionService.findAll();
+        List<TransactionOrder> itemsList = transactionService.findAll();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Map<Long, String> sellerWallets = new HashMap<>();
+        for (TransactionOrder item : itemsList) {
+            Wallet sellerWallet = walletRepository.findByUser(item.getSeller());
+            try {
+                sellerWallets.put(item.getTransactionId(), objectMapper.writeValueAsString(sellerWallet));
+            } catch (JsonProcessingException e) {
+                sellerWallets.put(item.getTransactionId(), null);
+            }
+        }
 
         model.addAttribute("listItems", itemsList);
+        model.addAttribute("sellerWallets", sellerWallets);
         return "adminOrders";
     }
 }
