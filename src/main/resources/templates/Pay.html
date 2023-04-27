@@ -328,6 +328,7 @@ button.action:hover {
 				<p class="description" th:text="*{item.itemDesc}"></p>
 				<div class="cart">
 					<input type="hidden" id="updatedItemPrice" th:value="${item.itemPrice}" />
+
 					<input type="hidden" id="bidPrice" th:value="${bidPrice}" />
 
 					<p class="price" th:text="'&#8364;' + ${displayPrice}"></p>

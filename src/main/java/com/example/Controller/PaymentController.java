@@ -59,21 +59,7 @@ public class PaymentController {
         model.addAttribute("listItems", itemsList);
         return "transactions";
     }
-//    @GetMapping("/PayPal")
-//    public String viewCheckout(@RequestParam("item") Long itemId, @RequestParam(value = "bidPrice", required = false) Integer bidPrice, Model model) {
-//        Item item = itemRepository.findByItemId(itemId);
-//        System.out.println("item price :" + item.getItemPrice());
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-//        User user= userRepo.findByEmail(userDetails.getUsername());
-//        model.addAttribute("item", item);
-//        model.addAttribute("buyerId", user.getId());
-//        model.addAttribute("bid", new Bid());
-//        if (bidPrice != null) {
-//            item.setItemPrice(bidPrice);
-//        }
-//        return "Pay";
-//    }
+
 @GetMapping("/PayPal")
 public String viewCheckout(@RequestParam("item") Long itemId, @RequestParam(value = "bidPrice", required = false) Integer bidPrice, Model model) {
     Item item = itemRepository.findByItemId(itemId);

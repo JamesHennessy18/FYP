@@ -28,12 +28,10 @@ import java.util.Objects;
 
 @Controller
 public class ProductController {
-
     @Autowired
     private ItemRepository itemRepository;
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ItemServiceImp itemServiceImp;
 
@@ -84,7 +82,6 @@ public class ProductController {
             }
         }
 
-        // Update and save the item with the image names
         itemRepository.save(item);
 
         redirectAttributes.addFlashAttribute("message", "Product Listed for sale");
