@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>List Transactions</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <style>
+
+	.thead-green {
+  background-color: #05762E; /* Adjust the color as needed */
+  color: #ffffff; /* Adjust the text color as needed */
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: Arial, sans-serif;
+  }
+
+  .table thead {
+    background-color: #05762E;
+    color: #fff;
+  }
+
+  .table th {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 2px solid #2c3e50;
+  }
+
+  .table tbody tr {
+    border-bottom: 1px solid #ddd;
+  }
+
+
+
+  .table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  .table td {
+    padding: 12px 15px;
+  }
+
+	</style>
+</head>
+<body>
+<<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">MarketSwipe</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/admin_home}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/adminProd}">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/users}"> Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/viewOrders}"> Crypto Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/viewPaypalOrders}"> PayPal Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/adminInfo}"> Account</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <li class="nav-item">
+        <div class="container text-center">
+            <form th:action="@{/logout}" method="post">
+                <p style="color:green;">
+                    Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+                </p>
+                <input type="submit" value="Sign Out" />
+            </form>
+        </div>
+    </li>
+</nav>
+<br><br><br><br><br><br>
+<div class="container text-center">
+    <div>
+        <h2 style="color:green;">MarketSwipe Orders</h2>
+    </div>
+
+    <div class="container text-center">
+        <div>
+            <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" alt="PayPal" />
+            <h2 style="color:green;">Manage PayPal Orders</h2>
+
+        <div>
+            <h3>Bought Items</h3>
+            <table class="table">
+                <thead class="thead-green">
+                <tr>
+                    <th>Image</th>
+                    <th>Item Name</th>
+                    <th>&#8364; Price</th>
+                    <th>OrderId</th>
+                    <th>Status</th>
+                    <th>Shipment Address</th>
+                    <th>Payment</th>
+                    <th>Pay-out Wallet</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item: ${listItems}">
+                    <td><img th:src="${item.photosImagePath}" style="width: 100px; height: 100px;"></td>
+                    <td th:text="${item.itemName}">Item Name</td>
+                    <td th:text="&#8364; + ${item.price}">Price</td>
+                    <td th:text="${item.orderId}">OrderId</td>
+                    <td th:text="${item.orderStatus}">Status</td>
+                    <td th:text="${item.address}">Shipment Address</td>
+                    <td th:text="${item.status}">Payment</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#walletModal"
+                                th:data-wallet="${sellerWallets.get(item.orderId)}">
+                            View Wallet
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+<div class="modal fade" id="walletModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Wallet Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <td>PayPal Email:</td>
+                        <td id="paypalEmail"></td>
+                    </tr>
+                    <tr>
+                        <td>Crypto Currency:</td>
+                        <td id="cryptoCurrency"></td>
+                    </tr>
+                    <tr>
+                        <td>Crypto Address:</td>
+                        <td id="cryptoAddress"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let walletButtons = document.querySelectorAll('[data-target="#walletModal"]');
+        walletButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                let walletData = button.getAttribute('data-wallet');
+                let wallet = walletData ? JSON.parse(walletData) : null;
+                if (wallet) {
+                    document.getElementById('paypalEmail').innerText = wallet.paypalEmail || 'N/A';
+                    document.getElementById('cryptoCurrency').innerText = wallet.cryptoCurrency || 'N/A';
+                    document.getElementById('cryptoAddress').innerText = wallet.cryptoAddress || 'N/A';
+                } else {
+                    document.getElementById('paypalEmail').innerText = 'N/A';
+                    document.getElementById('cryptoCurrency').innerText = 'N/A';
+                    document.getElementById('cryptoAddress').innerText = 'N/A';
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

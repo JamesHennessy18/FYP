@@ -4,13 +4,12 @@ import com.example.Model.Item;
 import com.example.Model.TransactionOrder;
 import com.example.Model.User;
 import com.example.Model.Wallet;
-import com.example.Repo.ItemRepository;
-import com.example.Repo.TransactionOrderRepository;
-import com.example.Repo.UserRepository;
-import com.example.Repo.WalletRepository;
+import com.example.Payment.PayPalOrder;
+import com.example.Repo.*;
 import com.example.Service.CustomUserDetails;
 import com.example.serviceImp.CustomUserDetailsService;
 import com.example.serviceImp.ItemServiceImp;
+import com.example.serviceImp.PayPalOrderService;
 import com.example.serviceImp.TransactionServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,9 +48,11 @@ public class AdminController {
 
     @Autowired
     private WalletRepository walletRepository;
+    @Autowired
+    private PayPalOrderRepository payPalOrderRepository;
 
     @Autowired
-    private TransactionOrderRepository transactionService;
+    private TransactionOrderRepository transactionOrderRepository;
     @GetMapping("/users")
     public String listUsers(Model model) {
         List<User> listUsers = userRepo.findAll();
@@ -107,7 +108,7 @@ public class AdminController {
 
     @GetMapping("/viewOrders")
     public String getOrders(Model model) throws IOException {
-        List<TransactionOrder> itemsList = transactionService.findAll();
+        List<TransactionOrder> itemsList = transactionOrderRepository.findAll();
         ObjectMapper objectMapper = new ObjectMapper();
 
         Map<Long, String> sellerWallets = new HashMap<>();
@@ -123,5 +124,25 @@ public class AdminController {
         model.addAttribute("listItems", itemsList);
         model.addAttribute("sellerWallets", sellerWallets);
         return "adminOrders";
+    }
+
+    @GetMapping("/viewPaypalOrders")
+    public String getPayPalOrders(Model model) throws IOException {
+        List<PayPalOrder> itemsList = payPalOrderRepository.findAll();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Map<Long, String> sellerWallets = new HashMap<>();
+        for (PayPalOrder item : itemsList) {
+            Wallet sellerWallet = walletRepository.findByUser(item.getSeller());
+            try {
+                sellerWallets.put(item.getOrderId(), objectMapper.writeValueAsString(sellerWallet));
+            } catch (JsonProcessingException e) {
+                sellerWallets.put(item.getOrderId(), null);
+            }
+        }
+
+        model.addAttribute("listItems", itemsList);
+        model.addAttribute("sellerWallets", sellerWallets);
+        return "adminPPOrders";
     }
 }
